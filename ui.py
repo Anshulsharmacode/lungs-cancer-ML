@@ -25,12 +25,18 @@ def main():
                 st.write(f"Predicted Label: {result['predicted_label']}")
                 st.write(f"Tumor Likelihood Score: {result['tumor_likelihood_score']:.4f}")
                 
+                # Check if accuracy is present
+                if 'accuracy' in result:
+                    st.write(f"Model Accuracy: {result['accuracy']:.2f}%")
+                else:
+                    st.write("Model Accuracy: Not available")
+                
                 st.subheader("Image Analysis:")
                 
                 # Display plots
                 for plot_name, plot_data in result['plots'].items():
                     st.image(base64.b64decode(plot_data), caption=plot_name.replace('_', ' ').title(), use_column_width=True)
-                               
+                    
             except requests.exceptions.RequestException as e:
                 st.error(f"An error occurred while making the request: {e}")
 

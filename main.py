@@ -64,6 +64,8 @@ def extract_image_features(image: np.array):
 def read_root():
     return {"message": "Welcome to the Tumor Prediction API! Use the /predict-tumor/ endpoint to upload images."}
 
+#whatsapp dhkturn me
+
 @app.post("/predict-tumor/")
 async def predict_tumor(file: UploadFile = File(...)):
     try:
@@ -91,15 +93,10 @@ async def predict_tumor(file: UploadFile = File(...)):
         # Generate plots
         plots = generate_plots(image_array, image_features)
         
-        # Calculate accuracy (using a dummy accuracy value for demonstration)
-        # In a real scenario, you would validate against a test set
-        accuracy = 1.0  # Placeholder for actual accuracy calculation
-        
         return {
             "tumor_type": tumor_type,
             "predicted_label": predicted_label,
             "tumor_likelihood_score": tumor_score,
-            "accuracy": accuracy * 100,  # Convert to percentage
             "plots": plots
         }
     
@@ -109,6 +106,7 @@ async def predict_tumor(file: UploadFile = File(...)):
 # Training the model with dummy data for demonstration
 def train_model():
     # Generate dummy data for training
+    # In practice, replace this with your real image feature extraction
     X_dummy = np.random.rand(100, 10)  # 100 samples, 10 features
     y_dummy = np.random.choice(list(tumor_types.keys()), size=100)  # Random labels from tumor_types
 
@@ -120,6 +118,9 @@ def train_model():
 
 # Call the training function when the application starts
 train_model()
+
+# To run this FastAPI application, use the command:
+# uvicorn main:app --host 0.0.0.0 --port 5000
 
 def tumor_likelihood(image_features):
     weights = {
@@ -153,19 +154,6 @@ def generate_plots(image_array, image_features):
     plt.axis('off')
     plots['grayscale'] = plot_to_base64(plt)
     
-    # Highlighted tumor plot (example)
-    plt.figure(figsize=(8, 8))
-    plt.imshow(image_array)
-    plt.title("Highlighted Tumor Area")
-    # Assuming you have a function to get tumor coordinates
-    tumor_coordinates = get_tumor_coordinates(image_features)  # Implement this function based on your logic
-    if tumor_coordinates:
-        for coord in tumor_coordinates:
-            plt.gca().add_patch(plt.Rectangle((coord[0], coord[1]), coord[2], coord[3], 
-                                                edgecolor='red', facecolor='none', linewidth=2))
-    plt.axis('off')
-    plots['highlighted_tumor'] = plot_to_base64(plt)
-
     # Histogram
     plt.figure(figsize=(10, 5))
     plt.hist(image_gray.ravel(), bins=256, color='blue', alpha=0.7)
