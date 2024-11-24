@@ -10,7 +10,6 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import io
 import base64
-from skimage import color
 
 # Initialize FastAPI
 app = FastAPI()
@@ -64,8 +63,6 @@ def extract_image_features(image: np.array):
 def read_root():
     return {"message": "Welcome to the Tumor Prediction API! Use the /predict-tumor/ endpoint to upload images."}
 
-#whatsapp dhkturn me
-
 @app.post("/predict-tumor/")
 async def predict_tumor(file: UploadFile = File(...)):
     try:
@@ -101,12 +98,11 @@ async def predict_tumor(file: UploadFile = File(...)):
         }
     
     except Exception as e:
-        raise HTTPException(status_code=400, detail=f"An error occurred while processing the image: {e}")
+        raise HTTPException(status_code=400, detail=f"An error occurred while processing the image: {str(e)}")
 
 # Training the model with dummy data for demonstration
 def train_model():
     # Generate dummy data for training
-    # In practice, replace this with your real image feature extraction
     X_dummy = np.random.rand(100, 10)  # 100 samples, 10 features
     y_dummy = np.random.choice(list(tumor_types.keys()), size=100)  # Random labels from tumor_types
 
